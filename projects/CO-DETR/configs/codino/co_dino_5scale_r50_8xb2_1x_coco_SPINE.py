@@ -5,9 +5,15 @@
 
 _base_ = 'mmdet::common/ssj_scp_270k_coco-instance.py'
 
+import sys
+import os
+sys.path.insert(0, '/scratch/dldevel/osuna/mmdetection/projects/CO-DETR/')
+
 # from codetr import *
+
 custom_imports = dict(
-    imports=['projects.CO-DETR.codetr'], allow_failed_imports=False)
+    imports=['codetr'], allow_failed_imports=False)
+
 
 # model settings
 num_dec_layer = 6
@@ -17,7 +23,8 @@ classes = ('spine')
 
 backend_args = None
 dataset_type = 'SpineDataset'
-data_root = '/scratch/dldevel/osuna/spines/trackformer/data/spine_S1/'
+# data_root = '/scratch/dldevel/osuna/spines/trackformer/data/spine_A2/'
+data_root = os.getenv('DATAROOT') if os.getenv('DATAROOT') else '/scratch/dldevel/osuna/spines/trackformer/data/spine_A2/'
 max_epochs = 100
 
 image_size = (512, 512)
@@ -371,10 +378,9 @@ val_dataloader = dict(
 test_dataloader = val_dataloader
 
 val_evaluator = dict(
-    type='CocoMetric',
+    type='SpineMetric',
     ann_file = data_root + 'annotations/val.json',
-    metric=['bbox', 'proposal_fast'],
-    iou_thrs=[0.5],
+    metric=['bbox'],
     format_only=False,
     backend_args=backend_args)
 test_evaluator=val_evaluator
@@ -407,6 +413,7 @@ default_hooks = dict(
         type='CheckpointHook', 
         by_epoch=True, 
         interval=1,
-        save_best='auto')
+        save_best='coco/spine_f1',
+        rule='greater')
         )
 log_processor = dict(by_epoch=True)
