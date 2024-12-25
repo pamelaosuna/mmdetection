@@ -413,6 +413,7 @@ default_hooks = dict(
         type='CheckpointHook', 
         by_epoch=True, 
         interval=1,
+        max_keep_ckpts=3,
         save_best='coco/spine_f1',
         rule='greater')
         )

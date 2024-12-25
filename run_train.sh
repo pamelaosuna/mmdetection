@@ -15,7 +15,7 @@ echo "loaded conda environment"
 echo "start training..."
 date
 
-WHICH_DATA=S1A2
+WHICH_DATA=A2
 export DATAROOT=/scratch/dldevel/osuna/spines/trackformer/data/spine_${WHICH_DATA}/
 
 # python -c "import torch; print(torch.__version__, torch.cuda.is_available(), torch.version.cuda)"
